@@ -1,0 +1,18 @@
+FROM php:7.4-cli
+
+RUN apt-get update && apt-get install -y libpq-dev zlib1g-dev libzip-dev libicu-dev zip g++ \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql zip intl
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN groupadd --gid ${USER_ID} parser \
+  && useradd --uid ${GROUP_ID} --gid parser --shell /bin/bash --create-home parser
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN chown ${USER_ID}:${GROUP_ID} /usr/local/bin/composer
+
+WORKDIR /app

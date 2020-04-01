@@ -1,0 +1,53 @@
+version: '3.1'
+
+services:
+  parser-nginx:
+    build:
+      context: ./docker
+      dockerfile: nginx.docker
+    volumes:
+      - ./services/parser:/app
+    depends_on:
+      - parser-php-fpm
+    ports:
+      - "80:80"
+  parser-php-fpm:
+    build:
+      context: ./docker
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./services/parser:/app
+    depends_on:
+      - parser-postgres
+  parser-php-cli:
+    build:
+      context: ./docker
+      dockerfile: php-cli.docker
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
+    volumes:
+      - ./services/parser:/app
+      - composer:/root/.composer/cache
+    depends_on:
+      - parser-postgres
+  parser-postgres:
+    image: postgres:12.2-alpine
+    volumes:
+      - parser-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 54321:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  parser-postgres:
+  composer:
