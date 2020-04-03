@@ -30,5 +30,5 @@ parser-test:
 parser-migrations:
 	docker-compose run -u $(id -u ${USER}):$(id -g ${USER}) --rm parser-php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
-run:
-	docker-compose run -u $(id -u ${USER}):$(id -g ${USER}) --rm parser-php-cli php bin/console parser:run
+parse:
+	docker-compose run -u $(id -u ${USER}):$(id -g ${USER}) --rm parser-php-cli php bin/console parser:parse

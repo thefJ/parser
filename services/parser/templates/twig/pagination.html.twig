@@ -1,0 +1,7 @@
+{% for page in pages %}
+    {% if page.is_active %}
+        <b>{{ page.number }}</b>
+    {% else %}
+        <a href="{{ page.url }}">{{ page.number }}</a>
+    {% endif %}
+{% endfor %}

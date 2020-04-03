@@ -15,10 +15,12 @@ services:
     build:
       context: ./docker
       dockerfile: php-fpm.docker
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     volumes:
       - ./services/parser:/app
-    depends_on:
-      - parser-postgres
   parser-php-cli:
     build:
       context: ./docker
@@ -26,13 +28,16 @@ services:
       args:
         USER_ID: ${USER_ID:-0}
         GROUP_ID: ${GROUP_ID:-0}
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     volumes:
       - ./services/parser:/app
       - composer:/root/.composer/cache
-    depends_on:
-      - parser-postgres
   parser-postgres:
     image: postgres:12.2-alpine
+    restart: always
     volumes:
       - parser-postgres:/var/lib/postgresql/data
     environment:

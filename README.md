@@ -7,7 +7,9 @@ Parser for log files
 - change .env parameters if you need
 
 **Run project** 
-- run command: `make init`
-- run parsing command `make run`
+- run command `make init`
+
+**Parsing**
+- run parsing command `make parse`
 
 Project: http://localhost

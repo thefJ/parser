@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table>
+        <thead>
+            <tr>
+                <th>IP</th><th>Browser</th><th>OS</th><th>URl count</th><th>First referrer</th><th>Last url</th>
+            </tr>
+        </thead>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.ip }}</td>
+                <td>{{ client.browser }}</td>
+                <td>{{ client.os }}</td>
+                <td>{{ client.url_count }}</td>
+                <td>{{ client.referrer }}</td>
+                <td>{{ client.url }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="navigation">
+        {{ pagination(paginator, count) }}
+    </div>
+{% endblock %}

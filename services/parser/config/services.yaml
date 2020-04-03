@@ -4,12 +4,18 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.parser_strategy: !php/const App\Command\Parser\Strategy\ParserStrategyInterface::TAG
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    _instanceof:
+        App\Command\Parser\Strategy\ParserStrategyInterface:
+            lazy: true
+            tags: ['%app.parser_strategy%']
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -25,3 +31,13 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    App\Command\Parser\ParserStrategyCollection:
+        lazy: true
+        arguments: [!tagged '%app.parser_strategy%']
+
+    # Провайдеры ссылок
+    App\Command\Parser\Strategy\:
+        resource: '../src/Command/Parser/Strategy/*Strategy.php'
+        tags: ['app.parser_strategy']
